@@ -22,7 +22,6 @@ LDFLAGS		=	-pthread
 
 RM			=	rm -f
 
--include $(DEP)
 
 all: $(NAME)
 
@@ -31,6 +30,8 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(HEADER) | $(OBJ_DIR)
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
+
+-include $(DEP)
 
 clean:
 	$(RM) -r $(OBJ_DIR)
