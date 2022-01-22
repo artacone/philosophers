@@ -28,16 +28,19 @@ typedef struct s_input {
 }	t_input;
 
 typedef struct s_philo {
-	int	id;
+	int				id;
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*right;
+	t_input			*input;
 }	t_philo;
 
 typedef struct s_table {
 	t_input			input;
+	t_philo 		*philos;
 	pthread_t		*threads;
+	pthread_t		watcher;
 	pthread_mutex_t	*mutex_forks;
 	pthread_mutex_t	mutex_print;
-	pthread_t		watcher;
-	pthread_t 		*philos;
 }	t_table;
 
 int	ft_atoi(const char *nptr);
