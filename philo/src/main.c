@@ -1,9 +1,33 @@
 #include <main.h>
+#include <error.h>
 
+/* TODO
+ * 	Add specific error messages
+ * 	Check args are valid (numbers > 0)
+*/
 
-int main()
+static int check_input(int argc, char *argv[])
 {
-	printf("Hello, world!\n");
-	printf("This is a test!\n");
-	return 0;
+	if (argc < 5 || argc > 6)
+	{
+		return (0);
+	}
+	(void**)argv;
+	return (1);
+}
+
+int main(int argc, char *argv[])
+{
+	if (!check_input(argc, argv))
+	{
+		return (ERROR_INPUT);
+	}
+
+	// Initialize
+
+	// Start threads
+
+	// Clear up
+
+	return (0); // Consider returning status
 }
