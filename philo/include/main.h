@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <stdlib.h>
+# include <unistd.h>
 
 // Consider unsigned
 typedef struct s_input {
@@ -35,8 +36,11 @@ typedef struct s_table {
 	pthread_t		*threads;
 	pthread_mutex_t	*mutex_forks;
 	pthread_mutex_t	mutex_print;
+	pthread_t		watcher;
+	pthread_t 		*philos;
 }	t_table;
 
 int	ft_atoi(const char *nptr);
+int	create_threads(t_table *table);
 
 #endif

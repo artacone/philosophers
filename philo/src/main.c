@@ -39,7 +39,7 @@ static int	init_input(int argc, char *argv[], t_input *in)
 	return (1);
 }
 
-int	init_mutexes(t_table *table)
+static int	init_mutexes(t_table *table)
 {
 	int				n;
 	pthread_mutex_t	*forks;
@@ -62,11 +62,21 @@ int	init_mutexes(t_table *table)
 	return (1);
 }
 
+static int	init_threads(t_table *table)
+{
+	table->philos = malloc(table->input.n_philos * sizeof(*(table->philos)));
+	if (table->philos == NULL)
+		return (0);
+	return (1);
+}
+
 int	init_table(int argc, char *argv[], t_table *table)
 {
 	if (!init_input(argc, argv, &table->input))
 		return (0);
 	if (!init_mutexes(table))
+		return (0);
+	if (!init_threads(table))
 		return (0);
 	// TODO further init
 	return (1);
@@ -81,9 +91,11 @@ int	main(int argc, char *argv[])
 	{
 		return (ERROR_INPUT);
 	}
-
 	// Start threads
-
+	if (!create_threads(&table))
+	{
+		return (2); // FIXME errcode
+	}
 	// Clear up
 
 	return (0); // Consider returning status
