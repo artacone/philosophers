@@ -36,7 +36,7 @@ typedef struct s_philo {
 
 typedef struct s_table {
 	t_input			input;
-	t_philo 		*philos;
+	t_philo			*philos;
 	pthread_t		*threads;
 	pthread_t		watcher;
 	pthread_mutex_t	*mutex_forks;
@@ -44,6 +44,7 @@ typedef struct s_table {
 }	t_table;
 
 int	ft_atoi(const char *nptr);
+int	init_table(int argc, char *argv[], t_table *table);
 int	create_threads(t_table *table);
 
 #endif
