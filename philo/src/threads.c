@@ -13,6 +13,7 @@
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
@@ -58,21 +59,28 @@ void	*watcher_routine(void *arg)
 			++i;
 		}
 	}
-	return NULL;
+	return (NULL);
 }
 #pragma clang diagnostic pop
 
 int	create_threads(t_table *table)
 {
-	int	n;
+	int		i;
+	int		n;
+	t_philo	*philos;
 
 	n = table->input.n_philos;
-
-	if (pthread_create(&table->watcher, NULL, watcher_routine, table) != 0)
+	philos = table->philos;
+	if (pthread_create(&table->watcher, NULL, watcher_routine, philos) != 0)
 		return (0);
-	while (n > 0)
+	i = 0;
+	while (i < n)
 	{
-		pthread_create(&(table->philos[--n]), NULL, philo_routine, table);
+		if (pthread_create(table->threads + i, NULL, philo_routine, philos + i))
+		{
+			return (0);
+		}
+		++i;
 	}
 	return (1);
 }

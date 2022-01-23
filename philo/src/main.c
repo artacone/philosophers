@@ -28,6 +28,9 @@ int	main(int argc, char *argv[])
 		return (2); // FIXME errcode
 	}
 	// Clear up (allocation -> free; destroy mutexes; ? join threads)
-
-	return (0); // Consider returning status
+	if (!end_simulation(&table))
+	{
+		return (3); // FIXME errcode
+	}
+	return (0); // Consider returning status upon death/all_eaten
 }

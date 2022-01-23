@@ -46,5 +46,6 @@ typedef struct s_table {
 int	ft_atoi(const char *nptr);
 int	init_table(int argc, char *argv[], t_table *table);
 int	create_threads(t_table *table);
+int	end_simulation(t_table *table);
 
 #endif
