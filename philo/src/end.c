@@ -56,7 +56,7 @@ int	end_simulation(t_table *table)
 	int	n;
 
 	n = table->input.n_philos;
-	join_threads(n, table->threads,  &table->watcher);
+	join_threads(n, table->threads, &table->watcher);
 	destroy_mutexes(n, table->mutex_forks, &table->mutex_print);
 	free_resources(table->philos, table->threads, table->mutex_forks);
 	return (1);

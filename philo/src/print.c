@@ -11,9 +11,15 @@
 /* ************************************************************************** */
 #include "../include/main.h"
 
-void	print(char *str, pthread_mutex_t *mutex_print)
+void	print_error(char *err_msg)
+{
+	printf("%s", err_msg);
+}
+
+// Send only id and timestamp
+void	print_msg(char *str, t_philo *philo, pthread_mutex_t *mutex_print)
 {
 	pthread_mutex_lock(mutex_print);
-	printf("msg");
+	printf("%lu %d %s\n", get_time_ms(), philo->id, str); // FIXME
 	pthread_mutex_unlock(mutex_print);
 }

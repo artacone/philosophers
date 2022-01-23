@@ -76,6 +76,8 @@ static int	init_philos(t_table *table)
 	while (i < n)
 	{
 		philos->id = i + 1;
+		philos->is_alive = 1;
+		philos->meals_left = philos->input->n_to_eat;
 		philos->left = &table->mutex_forks[i];
 		philos->right = &table->mutex_forks[(i + 1) % n];
 		philos->input = &table->input;
@@ -106,6 +108,5 @@ int	init_table(int argc, char *argv[], t_table *table)
 		return (0);
 	if (!init_threads(table))
 		return (0);
-	// TODO further init
 	return (1);
 }
