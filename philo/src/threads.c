@@ -48,7 +48,7 @@ void	*philo_routine(void *arg)
 
 int	has_died(t_philo *philo)
 {
-	if ((int)(get_time_ms() - philo->last_meal_time) > philo->input->time_to_eat)
+	if ((int)(get_time_ms() - philo->last_meal_time) > philo->input->time_to_die)
 	{
 		philo->is_alive = 0;
 		return (1);
