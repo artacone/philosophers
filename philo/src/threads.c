@@ -23,11 +23,11 @@ static void	eat_sleep_think(t_philo *philo)
 	usleep(philo->input->time_to_eat * 1000);
 	pthread_mutex_unlock(philo->second);
 	pthread_mutex_unlock(philo->first);
-	// philo->meals_left -= 1;
+	if (philo->meals_left > 0)
+		philo->meals_left -= 1;
 	print_msg(MSG_SLEEP, philo); // FIXME
 	usleep(philo->input->time_to_sleep * 1000);
 	print_msg(MSG_THINK, philo); // FIXME
-	philo->meals_left -= 1;
 }
 
 void	*philo_routine(void *arg)
@@ -44,7 +44,7 @@ void	*philo_routine(void *arg)
 	{
 		eat_sleep_think(philo);
 	}
-	return NULL;
+	return (NULL);
 }
 
 int	has_died(t_philo *philo)
@@ -59,7 +59,7 @@ int	has_died(t_philo *philo)
 
 void	kill_all(t_philo *philos, int n)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < n)
@@ -68,9 +68,9 @@ void	kill_all(t_philo *philos, int n)
 	}
 }
 
-int	check_philos(t_philo *philos, int n)
+int	check_philos(t_philo *philos, int n, int *hungry)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < n)
@@ -78,12 +78,18 @@ int	check_philos(t_philo *philos, int n)
 		if (has_died(philos + i))
 		{
 			print_msg(MSG_DEATH, philos + i);
-			return 0;
+			return (0);
 		}
-		if (/* table->hungry == */0)
+		if (philos->meals_left == 0)
 		{
-			return 0;
+			philos->meals_left = -1;
+			*hungry -= 1;
+			if (*hungry == 0)
+			{
+				return (0);
+			}
 		}
+
 		++i;
 	}
 	return (1);
@@ -100,7 +106,7 @@ void	*watcher_routine(void *arg)
 	philos = table->philos;
 	while (1)
 	{
-		if (!check_philos(philos, n))
+		if (!check_philos(philos, n, &table->hungry))
 		{
 			break ;
 		}
