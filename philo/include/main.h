@@ -26,18 +26,20 @@
 
 // Consider unsigned
 typedef struct s_input {
-	int	n_philos;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	n_to_eat;
+	int		n_philos;
+	int		t_to_die;
+	int		t_to_eat;
+	int		t_to_sleep;
+	int		n_to_eat;
+	int		hungry;
+	size_t	t_start;
 }	t_input;
 
 typedef struct s_philo {
 	int				id;
 	int				is_alive;
 	int				meals_left;
-	size_t			last_meal_time;
+	size_t			t_last_meal;
 	pthread_mutex_t	*first;
 	pthread_mutex_t	*second;
 	pthread_mutex_t	*print;
@@ -46,12 +48,11 @@ typedef struct s_philo {
 
 typedef struct s_table {
 	t_input			input;
-	int				hungry;
 	t_philo			*philos;
 	pthread_t		*threads;
 	pthread_t		watcher;
-	pthread_mutex_t	*mutex_forks;
-	pthread_mutex_t	mutex_print;
+	pthread_mutex_t	*m_forks;
+	pthread_mutex_t	m_print;
 }	t_table;
 
 int		parse_arg(const char *nptr);

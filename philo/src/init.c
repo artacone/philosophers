@@ -25,15 +25,15 @@ static int	init_input(int argc, char *argv[], t_input *in)
 		return (0);
 	}
 	in->n_philos = parse_arg(argv[1]);
-	in->time_to_die = parse_arg(argv[2]);
-	in->time_to_eat = parse_arg(argv[3]);
-	in->time_to_sleep = parse_arg(argv[4]);
+	in->t_to_die = parse_arg(argv[2]);
+	in->t_to_eat = parse_arg(argv[3]);
+	in->t_to_sleep = parse_arg(argv[4]);
 	if (argc == 5)
-		in->n_to_eat = -1;
+		in->n_to_eat = in->hungry = -1;
 	else
-		in->n_to_eat = parse_arg(argv[5]);
-	if (in->n_philos * in->time_to_die * in->time_to_eat
-		* in->time_to_sleep * in->n_to_eat == 0)
+		in->n_to_eat = in->hungry = parse_arg(argv[5]);
+	if (in->n_philos * in->t_to_die * in->t_to_eat
+		* in->t_to_sleep * in->n_to_eat == 0)
 	{
 		printf("Error: wrong arguments.\n");
 		return (0);
@@ -57,8 +57,8 @@ static int	init_mutexes(t_table *table)
 			return (0);
 		}
 	}
-	table->mutex_forks = forks;
-	if (pthread_mutex_init(&table->mutex_print, NULL) != 0)
+	table->m_forks = forks;
+	if (pthread_mutex_init(&table->m_print, NULL) != 0)
 	{
 		return (0);
 	}
@@ -80,15 +80,15 @@ static int	init_philos(t_table *table)
 	{
 		philos[i].id = i + 1;
 		philos[i].is_alive = 1;
-		philos[i].first = &table->mutex_forks[i];
-		philos[i].second = &table->mutex_forks[(i + 1) % n];
-		philos[i].print = &table->mutex_print;
+		philos[i].first = &table->m_forks[i];
+		philos[i].second = &table->m_forks[(i + 1) % n];
+		philos[i].print = &table->m_print;
 		philos[i].input = &table->input;
 		philos[i].meals_left = philos->input->n_to_eat;
 		++i;
 	}
-	philos[n - 1].first = &table->mutex_forks[0];
-	philos[n - 1].second = &table->mutex_forks[n - 1];
+	philos[n - 1].first = &table->m_forks[0];
+	philos[n - 1].second = &table->m_forks[n - 1];
 	table->philos = philos;
 	return (1);
 }
@@ -114,9 +114,6 @@ int	init_table(int argc, char *argv[], t_table *table)
 		return (0);
 	if (!init_threads(table))
 		return (0);
-	if (table->input.n_to_eat == -1)
-		table->hungry = -1;
-	else
-		table->hungry = table->input.n_philos;
+	table->input.t_start = get_time_ms();
 	return (1);
 }

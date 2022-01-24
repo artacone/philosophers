@@ -63,14 +63,14 @@ int
 	n = table->input.n_philos;
 	if (!join_threads(n, table->threads, &table->watcher))
 	{
-		print_error(ERRMSG_THREAD_JOIN, &table->mutex_print);
+		print_error(ERRMSG_THREAD_JOIN, &table->m_print);
 		return (0);
 	}
-	if (!destroy_mutexes(n, table->mutex_forks, &table->mutex_print))
+	if (!destroy_mutexes(n, table->m_forks, &table->m_print))
 	{
-		print_error(ERRMSG_MUTEX_DESTROY, &table->mutex_print);
+		print_error(ERRMSG_MUTEX_DESTROY, &table->m_print);
 		return (0);
 	}
-	free_resources(table->philos, table->threads, table->mutex_forks);
+	free_resources(table->philos, table->threads, table->m_forks);
 	return (1);
 }

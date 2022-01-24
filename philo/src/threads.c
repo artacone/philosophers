@@ -18,15 +18,15 @@ static void	eat_sleep_think(t_philo *philo)
 	print_msg(MSG_FORK, philo); // FIXME
 	pthread_mutex_lock(philo->second);
 	print_msg(MSG_FORK, philo); // FIXME
-	philo->last_meal_time = get_time_ms();
+	philo->t_last_meal = get_time_ms();
 	print_msg(MSG_EAT, philo); // FIXME
-	usleep(philo->input->time_to_eat * 1000);
+	usleep(philo->input->t_to_eat * 1000);
 	pthread_mutex_unlock(philo->second);
 	pthread_mutex_unlock(philo->first);
 	if (philo->meals_left > 0)
 		philo->meals_left -= 1;
 	print_msg(MSG_SLEEP, philo); // FIXME
-	usleep(philo->input->time_to_sleep * 1000);
+	usleep(philo->input->t_to_sleep * 1000);
 	print_msg(MSG_THINK, philo); // FIXME
 }
 
@@ -35,10 +35,10 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	philo->last_meal_time = get_time_ms();
+	philo->t_last_meal = get_time_ms();
 	if (philo->id % 2 == 0)
 	{
-		usleep(philo->input->time_to_eat); // FIXME
+		usleep(philo->input->t_to_eat); // FIXME
 	}
 	while (philo->is_alive)
 	{
@@ -49,7 +49,7 @@ void	*philo_routine(void *arg)
 
 int	has_died(t_philo *philo)
 {
-	if ((int)(get_time_ms() - philo->last_meal_time) > philo->input->time_to_die)
+	if ((int)(get_time_ms() - philo->t_last_meal) > philo->input->t_to_die)
 	{
 		philo->is_alive = 0;
 		return (1);
@@ -68,7 +68,7 @@ void	kill_all(t_philo *philos, int n)
 	}
 }
 
-int	check_philos(t_philo *philos, int n, int *hungry)
+int	check_philos(t_philo *philos, int n)
 {
 	int	i;
 
@@ -83,13 +83,12 @@ int	check_philos(t_philo *philos, int n, int *hungry)
 		if (philos[i].meals_left == 0)
 		{
 			philos[i].meals_left = -1;
-			*hungry -= 1;
-			if (*hungry == 0)
+			philos[i].input->hungry -= 1;
+			if (philos[i].input->hungry == 0)
 			{
 				return (0);
 			}
 		}
-
 		++i;
 	}
 	return (1);
@@ -106,7 +105,7 @@ void	*watcher_routine(void *arg)
 	philos = table->philos;
 	while (1)
 	{
-		if (!check_philos(philos, n, &table->hungry))
+		if (!check_philos(philos, n))
 		{
 			break ;
 		}
@@ -130,7 +129,7 @@ int	create_threads(t_table *table)
 	philos = table->philos;
 	if (pthread_create(&table->watcher, NULL, watcher_routine, table) != 0)
 	{
-		print_error(ERRMSG_THREAD_CREATE, &table->mutex_print);
+		print_error(ERRMSG_THREAD_CREATE, &table->m_print);
 		return (0);
 	}
 	i = 0;
@@ -138,7 +137,7 @@ int	create_threads(t_table *table)
 	{
 		if (pthread_create(table->threads + i, NULL, philo_routine, philos + i))
 		{
-			print_error(ERRMSG_THREAD_CREATE, &table->mutex_print);
+			print_error(ERRMSG_THREAD_CREATE, &table->m_print);
 			return (0);
 		}
 		++i;

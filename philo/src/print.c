@@ -22,6 +22,6 @@ void	print_error(char *err_msg, pthread_mutex_t *lock)
 void	print_msg(char *str, t_philo *philo)
 {
 	pthread_mutex_lock(philo->print);
-	printf("%lu %d %s\n", get_time_ms(), philo->id, str); // FIXME
+	printf("%lu %d %s\n", get_time_ms() - philo->input->t_start, philo->id, str); // FIXME
 	pthread_mutex_unlock(philo->print);
 }
