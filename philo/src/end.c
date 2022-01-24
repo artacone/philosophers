@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 #include "../include/main.h"
 
-static int	join_threads(int n, pthread_t *philos, pthread_t *watcher)
+static int
+	join_threads(int n, pthread_t *philos, pthread_t *watcher)
 {
 	if (pthread_join(*watcher, NULL) != 0)
 	{
@@ -27,7 +28,8 @@ static int	join_threads(int n, pthread_t *philos, pthread_t *watcher)
 	return (1);
 }
 
-static int	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print)
+static int
+	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print)
 {
 	while (n > 0)
 	{
@@ -43,7 +45,8 @@ static int	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print
 	return (1);
 }
 
-static int	free_resources(t_philo *philos, pthread_t *ths, pthread_mutex_t *forks)
+static int
+	free_resources(t_philo *philos, pthread_t *ths, pthread_mutex_t *forks)
 {
 	free(philos);
 	free(ths);
@@ -51,7 +54,8 @@ static int	free_resources(t_philo *philos, pthread_t *ths, pthread_mutex_t *fork
 	return (1);
 }
 
-int	end_simulation(t_table *table)
+int
+	end_simulation(t_table *table)
 {
 	int	n;
 
