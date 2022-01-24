@@ -11,9 +11,11 @@
 /* ************************************************************************** */
 #include "../include/main.h"
 
-void	print_error(char *err_msg)
+void	print_error(char *err_msg, pthread_mutex_t *lock)
 {
+	pthread_mutex_lock(lock);
 	printf("%s", err_msg);
+	pthread_mutex_unlock(lock);
 }
 
 // Send only id and timestamp

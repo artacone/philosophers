@@ -62,5 +62,6 @@ int	end_simulation(t_table *table);
 size_t	get_time_ms(void);
 
 void	print_msg(char *str, t_philo * philo);
+void	print_error(char *err_msg, pthread_mutex_t *lock);
 
 #endif

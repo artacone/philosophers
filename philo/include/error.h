@@ -17,4 +17,8 @@
 # define ERROR_THREAD	2
 # define ERROR_ENDSIM	3
 
+# define ERRMSG_THREAD_CREATE	"Error: thread creation failed.\n"
+# define ERRMSG_THREAD_JOIN		"Error: thread join failed.\n"
+# define ERRMSG_MUTEX_DESTROY	"Error: mutex destroy failed.\n"
+
 #endif

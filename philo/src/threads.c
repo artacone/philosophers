@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/main.h"
+#include "../include/error.h"
 
 static void	eat_sleep_think(t_philo *philo)
 {
@@ -117,12 +118,16 @@ int	create_threads(t_table *table)
 	n = table->input.n_philos;
 	philos = table->philos;
 	if (pthread_create(&table->watcher, NULL, watcher_routine, table) != 0)
+	{
+		print_error(ERRMSG_THREAD_CREATE, &table->mutex_print);
 		return (0);
+	}
 	i = 0;
 	while (i < n)
 	{
 		if (pthread_create(table->threads + i, NULL, philo_routine, philos + i))
 		{
+			print_error(ERRMSG_THREAD_CREATE, &table->mutex_print);
 			return (0);
 		}
 		++i;
