@@ -54,7 +54,7 @@ typedef struct s_table {
 	pthread_mutex_t	mutex_print;
 }	t_table;
 
-int	ft_atoi(const char *nptr);
+int	parse_arg(const char *nptr);
 int	init_table(int argc, char *argv[], t_table *table);
 int	create_threads(t_table *table);
 int	end_simulation(t_table *table);
