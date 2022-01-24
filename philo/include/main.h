@@ -40,6 +40,7 @@ typedef struct s_philo {
 	size_t			last_meal_time;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
+	pthread_mutex_t	*print;
 	t_input			*input;
 }	t_philo;
 
@@ -60,6 +61,6 @@ int	end_simulation(t_table *table);
 
 size_t	get_time_ms(void);
 
-void	print_msg(char *str, t_philo * philo, pthread_mutex_t *mutex_print);
+void	print_msg(char *str, t_philo * philo);
 
 #endif

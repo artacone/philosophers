@@ -14,17 +14,18 @@
 static void	eat_sleep_think(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left);
-	print_msg(MSG_FORK, philo, ); // FIXME
+	print_msg(MSG_FORK, philo); // FIXME
 	pthread_mutex_lock(philo->right);
-	print_msg(MSG_FORK, philo, ); // FIXME
+	print_msg(MSG_FORK, philo); // FIXME
 	philo->last_meal_time = get_time_ms();
-	print_msg(MSG_EAT, philo, ); // FIXME
+	print_msg(MSG_EAT, philo); // FIXME
 	usleep(philo->input->time_to_eat / 1000);
 	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
-	print_msg(MSG_SLEEP, philo, ); // FIXME
+	// philo->meals_left -= 1;
+	print_msg(MSG_SLEEP, philo); // FIXME
 	usleep(philo->input->time_to_sleep / 1000);
-	print_msg(MSG_THINK, philo, ); // FIXME
+	print_msg(MSG_THINK, philo); // FIXME
 	philo->meals_left -= 1;
 }
 
@@ -47,19 +48,44 @@ void	*philo_routine(void *arg)
 
 int	has_died(t_philo *philo)
 {
-	if (get_time_ms() - philo->last_meal_time > philo->input->time_to_eat)
+	if ((int)(get_time_ms() - philo->last_meal_time) > philo->input->time_to_eat)
 	{
+		philo->is_alive = 0;
 		return (1);
 	}
 	return (0);
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
-
-int	check_philos()
+void	kill_all(t_philo *philos, int n)
 {
+	int i;
 
+	i = 0;
+	while (i < n)
+	{
+		philos[i++].is_alive = 0;
+	}
+}
+
+int	check_philos(t_philo *philos, int n)
+{
+	int i;
+
+	i = 0;
+	while (i < n)
+	{
+		if (has_died(philos + i))
+		{
+			print_msg(MSG_DEATH, philos + i);
+			return 0;
+		}
+		if (/* table->hungry == */0)
+		{
+			return 0;
+		}
+		++i;
+	}
+	return (1);
 }
 
 void	*watcher_routine(void *arg)
@@ -73,24 +99,14 @@ void	*watcher_routine(void *arg)
 	philos = table->philos;
 	while (1)
 	{
-		i = 0;
-		while (i < n)
+		if (!check_philos(philos, n))
 		{
-			if (has_died(philos + i))
-			{
-				print_msg(MSG_DEATH, philos + i, &table->mutex_print);
-				break ;
-			}
-			if (table->hungry == 0)
-			{
-				break ;
-			}
-			++i;
+			break ;
 		}
 	}
+	kill_all(philos, n);
 	return (NULL);
 }
-#pragma clang diagnostic pop
 
 int	create_threads(t_table *table)
 {
