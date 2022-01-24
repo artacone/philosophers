@@ -17,20 +17,17 @@ int	main(int argc, char *argv[])
 {
 	t_table	table;
 
-	// Initialize
 	if (!init_table(argc, argv, &table))
 	{
 		return (ERROR_INPUT);
 	}
-	// Start threads
 	if (!create_threads(&table))
 	{
-		return (2); // FIXME errcode
+		return (ERROR_THREAD);
 	}
-	// Clear up (allocation -> free; destroy mutexes; ? join threads)
 	if (!end_simulation(&table))
 	{
-		return (3); // FIXME errcode
+		return (ERROR_ENDSIM);
 	}
 	return (0); // Consider returning status upon death/all_eaten
 }

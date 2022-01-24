@@ -13,6 +13,8 @@
 #ifndef ERROR_H
 # define ERROR_H
 
-# define ERROR_INPUT 1
+# define ERROR_INPUT	1
+# define ERROR_THREAD	2
+# define ERROR_ENDSIM	3
 
 #endif
