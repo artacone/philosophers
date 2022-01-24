@@ -10,36 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isspace(int c)
-{
-	return (c == ' ' || ('\t' <= c && c <= '\r'));
-}
-
 int	ft_isdigit(int c)
 {
 	return ('0' <= c && c <= '9');
 }
 
-int	ft_atoi(const char *nptr)
+int	parse_arg(const char *nptr)
 {
-	int	sign;
 	int	n;
 
 	n = 0;
-	while (ft_isspace(*nptr))
-		nptr++;
-	if (*nptr == '-')
+	while (*nptr)
 	{
-		sign = -1;
-		nptr++;
-	}
-	else
-	{
-		sign = 1;
-		if (*nptr == '+')
-			nptr++;
-	}
-	while (ft_isdigit(*nptr))
+		if (!ft_isdigit(*nptr))
+		{
+			return (0);
+		}
 		n = n * 10 + (*nptr++ - '0');
-	return (sign * n);
+	}
+	return (n);
 }
