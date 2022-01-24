@@ -80,9 +80,9 @@ int	check_philos(t_philo *philos, int n, int *hungry)
 			print_msg(MSG_DEATH, philos + i);
 			return (0);
 		}
-		if (philos->meals_left == 0)
+		if (philos[i].meals_left == 0)
 		{
-			philos->meals_left = -1;
+			philos[i].meals_left = -1;
 			*hungry -= 1;
 			if (*hungry == 0)
 			{
@@ -112,6 +112,11 @@ void	*watcher_routine(void *arg)
 		}
 	}
 	kill_all(philos, n);
+
+//	pthread_mutex_lock(&table->mutex_print);
+//	printf("===WATCHER OUT===\n"); // FIXME
+//	pthread_mutex_unlock(&table->mutex_print);
+
 	return (NULL);
 }
 

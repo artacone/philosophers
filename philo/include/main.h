@@ -46,7 +46,7 @@ typedef struct s_philo {
 
 typedef struct s_table {
 	t_input			input;
-	int				hungry; // init
+	int				hungry;
 	t_philo			*philos;
 	pthread_t		*threads;
 	pthread_t		watcher;
