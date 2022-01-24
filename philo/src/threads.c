@@ -13,15 +13,15 @@
 
 static void	eat_sleep_think(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left);
+	pthread_mutex_lock(philo->first);
 	print_msg(MSG_FORK, philo); // FIXME
-	pthread_mutex_lock(philo->right);
+	pthread_mutex_lock(philo->second);
 	print_msg(MSG_FORK, philo); // FIXME
 	philo->last_meal_time = get_time_ms();
 	print_msg(MSG_EAT, philo); // FIXME
 	usleep(philo->input->time_to_eat / 1000);
-	pthread_mutex_unlock(philo->right);
-	pthread_mutex_unlock(philo->left);
+	pthread_mutex_unlock(philo->second);
+	pthread_mutex_unlock(philo->first);
 	// philo->meals_left -= 1;
 	print_msg(MSG_SLEEP, philo); // FIXME
 	usleep(philo->input->time_to_sleep / 1000);

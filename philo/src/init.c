@@ -77,13 +77,15 @@ static int	init_philos(t_table *table)
 	{
 		philos[i].id = i + 1;
 		philos[i].is_alive = 1;
-		philos[i].left = &table->mutex_forks[i];
-		philos[i].right = &table->mutex_forks[(i + 1) % n];
+		philos[i].first = &table->mutex_forks[i];
+		philos[i].second = &table->mutex_forks[(i + 1) % n];
 		philos[i].print = &table->mutex_print;
 		philos[i].input = &table->input;
 		philos[i].meals_left = philos->input->n_to_eat;
 		++i;
 	}
+	philos[n - 1].first = &table->mutex_forks[0];
+	philos[n - 1].second = &table->mutex_forks[n - 1];
 	table->philos = philos;
 	return (1);
 }

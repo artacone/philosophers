@@ -38,8 +38,8 @@ typedef struct s_philo {
 	int				is_alive;
 	int				meals_left;
 	size_t			last_meal_time;
-	pthread_mutex_t	*left;
-	pthread_mutex_t	*right;
+	pthread_mutex_t	*first;
+	pthread_mutex_t	*second;
 	pthread_mutex_t	*print;
 	t_input			*input;
 }	t_philo;
