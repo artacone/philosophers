@@ -29,9 +29,15 @@ static int	init_input(int argc, char *argv[], t_input *in)
 	in->t_to_eat = parse_arg(argv[3]);
 	in->t_to_sleep = parse_arg(argv[4]);
 	if (argc == 5)
-		in->n_to_eat = in->hungry = -1;
+	{
+		in->n_to_eat = -1;
+		in->hungry = -1;
+	}
 	else
-		in->n_to_eat = in->hungry = parse_arg(argv[5]);
+	{
+		in->n_to_eat = parse_arg(argv[5]);
+		in->hungry = in->n_philos;
+	}
 	if (in->n_philos * in->t_to_die * in->t_to_eat
 		* in->t_to_sleep * in->n_to_eat == 0)
 	{
