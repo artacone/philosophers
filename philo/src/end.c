@@ -13,23 +13,6 @@
 #include "../include/error.h"
 
 static int
-	join_threads(int n, pthread_t *philos, pthread_t *watcher)
-{
-	if (pthread_join(*watcher, NULL) != 0)
-	{
-		return (0);
-	}
-	while (n > 0)
-	{
-		if (pthread_join(philos[--n], NULL) != 0)
-		{
-			return (0);
-		}
-	}
-	return (1);
-}
-
-static int
 	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print)
 {
 	while (n > 0)
@@ -61,7 +44,7 @@ int
 	int	n;
 
 	n = table->input.n_philos;
-	if (!join_threads(n, table->threads, &table->watcher))
+	if (pthread_join(table->watcher, NULL))
 	{
 		print_error(ERRMSG_THREAD_JOIN, &table->m_print);
 		return (0);

@@ -19,6 +19,7 @@
 
 # define ERRMSG_THREAD_CREATE	"Error: thread creation failed.\n"
 # define ERRMSG_THREAD_JOIN		"Error: thread join failed.\n"
+# define ERRMSG_THREAD_DETACH	"Error: thread detach failed.\n"
 # define ERRMSG_MUTEX_DESTROY	"Error: mutex destroy failed.\n"
 
 #endif

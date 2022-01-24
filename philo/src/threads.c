@@ -15,24 +15,30 @@
 static void	eat_sleep_think(t_philo *philo)
 {
 	pthread_mutex_lock(philo->first);
-	print_msg(MSG_FORK, philo); // FIXME
+	print_msg(MSG_FORK, philo);
+
 	pthread_mutex_lock(philo->second);
-	print_msg(MSG_FORK, philo); // FIXME
+	print_msg(MSG_FORK, philo);
+
 	philo->t_last_meal = get_time_ms();
-	print_msg(MSG_EAT, philo); // FIXME
+	print_msg(MSG_EAT, philo);
 	ms_sleep(philo->input->t_to_eat);
+
 	pthread_mutex_unlock(philo->second);
 	pthread_mutex_unlock(philo->first);
+
+	pthread_mutex_lock(philo->print);
 	if (philo->meals_left > 0)
 		philo->meals_left -= 1;
+	pthread_mutex_unlock(philo->print);
 
 //	pthread_mutex_lock(philo->print);
 //	printf("(%d) meals left: %d\nhungry: %d\n", philo->id, philo->meals_left, philo->input->hungry);
 //	pthread_mutex_unlock(philo->print);
 
-	print_msg(MSG_SLEEP, philo); // FIXME
+	print_msg(MSG_SLEEP, philo);
 	ms_sleep(philo->input->t_to_sleep);
-	print_msg(MSG_THINK, philo); // FIXME
+	print_msg(MSG_THINK, philo);
 }
 
 void	*philo_routine(void *arg)
@@ -54,11 +60,14 @@ void	*philo_routine(void *arg)
 
 int	has_died(t_philo *philo)
 {
+	pthread_mutex_lock(philo->print);
 	if ((int)(get_time_ms() - philo->t_last_meal) > philo->input->t_to_die)
 	{
 		philo->is_alive = 0;
+		pthread_mutex_unlock(philo->print);
 		return (1);
 	}
+	pthread_mutex_unlock(philo->print);
 	return (0);
 }
 
@@ -117,9 +126,9 @@ void	*watcher_routine(void *arg)
 	}
 	kill_all(philos, n);
 
-//	pthread_mutex_lock(&table->m_print);
-//	printf("===WATCHER OUT===\n"); // FIXME
-//	pthread_mutex_unlock(&table->m_print);
+	pthread_mutex_lock(&table->m_print);
+	printf("===WATCHER OUT===\n"); // FIXME
+	pthread_mutex_unlock(&table->m_print);
 
 	return (NULL);
 }
@@ -143,6 +152,11 @@ int	create_threads(t_table *table)
 		if (pthread_create(table->threads + i, NULL, philo_routine, philos + i))
 		{
 			print_error(ERRMSG_THREAD_CREATE, &table->m_print);
+			return (0);
+		}
+		if (pthread_detach(table->threads[i]))
+		{
+			print_error(ERRMSG_THREAD_DETACH, &table->m_print);
 			return (0);
 		}
 		++i;

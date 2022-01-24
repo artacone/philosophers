@@ -32,6 +32,6 @@ void	ms_sleep(int t_ms)
 	end = start + t_ms;
 	while (get_time_ms() < end)
 	{
-		usleep(100);
+		usleep(500);
 	}
 }
