@@ -61,6 +61,7 @@ int		create_threads(t_table *table);
 int		end_simulation(t_table *table);
 
 size_t	get_time_ms(void);
+void	ms_sleep(int t_ms);
 
 void	print_msg(char *str, t_philo *philo);
 void	print_error(char *err_msg, pthread_mutex_t *lock);

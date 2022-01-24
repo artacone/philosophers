@@ -20,13 +20,18 @@ static void	eat_sleep_think(t_philo *philo)
 	print_msg(MSG_FORK, philo); // FIXME
 	philo->t_last_meal = get_time_ms();
 	print_msg(MSG_EAT, philo); // FIXME
-	usleep(philo->input->t_to_eat * 1000);
+	ms_sleep(philo->input->t_to_eat);
 	pthread_mutex_unlock(philo->second);
 	pthread_mutex_unlock(philo->first);
 	if (philo->meals_left > 0)
 		philo->meals_left -= 1;
+
+//	pthread_mutex_lock(philo->print);
+//	printf("(%d) meals left: %d\nhungry: %d\n", philo->id, philo->meals_left, philo->input->hungry);
+//	pthread_mutex_unlock(philo->print);
+
 	print_msg(MSG_SLEEP, philo); // FIXME
-	usleep(philo->input->t_to_sleep * 1000);
+	ms_sleep(philo->input->t_to_sleep);
 	print_msg(MSG_THINK, philo); // FIXME
 }
 
@@ -38,7 +43,7 @@ void	*philo_routine(void *arg)
 	philo->t_last_meal = get_time_ms();
 	if (philo->id % 2 == 0)
 	{
-		usleep(philo->input->t_to_eat); // FIXME
+		ms_sleep(philo->input->t_to_eat);
 	}
 	while (philo->is_alive)
 	{
@@ -112,9 +117,9 @@ void	*watcher_routine(void *arg)
 	}
 	kill_all(philos, n);
 
-//	pthread_mutex_lock(&table->mutex_print);
+//	pthread_mutex_lock(&table->m_print);
 //	printf("===WATCHER OUT===\n"); // FIXME
-//	pthread_mutex_unlock(&table->mutex_print);
+//	pthread_mutex_unlock(&table->m_print);
 
 	return (NULL);
 }
