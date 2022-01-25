@@ -22,7 +22,7 @@ int	main(int argc, char *argv[])
 	{
 		return (ERROR_INPUT);
 	}
-	if (!create_threads(&table))
+	if (!create_threads(table.input.n_philos, philos))
 	{
 		return (ERROR_THREAD);
 	}

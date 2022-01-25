@@ -53,7 +53,7 @@ static int	init_mutexes(t_table *table)
 	table->m_forks = forks;
 	if (pthread_mutex_init(&table->m_print, NULL) != 0)
 		return (0);
-	if (pthread_mutex_init(&table->m_meals_eaten, NULL) != 0)
+	if (pthread_mutex_init(&table->m_fullness, NULL) != 0)
 		return (0);
 	return (1);
 }
@@ -75,8 +75,8 @@ static int	init_philos(int n, t_table *table, t_philo **philos)
 		if (pthread_mutex_init(&ps[i].m_start, NULL) ||
 				pthread_mutex_init(&ps[i].m_time, NULL))
 			return (0);
-		ps[i].m_print = &table->m_print;
 		ps[i].table = table;
+		ps[i].meals_eaten = 0;
 		pthread_mutex_lock(&ps[i].m_start);
 		++i;
 	}
@@ -94,7 +94,7 @@ int	init_table(int argc, char *argv[], t_table *table, t_philo **philos)
 	if (!init_philos(table->input.n_philos, table, philos))
 		return (0);
 	table->ok = 1;
-	table->meals_eaten = 0;
+	table->n_full = 0;
 	table->t_start = get_time_ms();
 	return (1);
 }

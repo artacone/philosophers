@@ -35,15 +35,16 @@ typedef struct s_input {
 typedef struct s_table {
 	t_input			input;
 	int				ok;
-	int				meals_eaten;
+	int				n_full;
 	size_t			t_start;
 	pthread_mutex_t	*m_forks;
-	pthread_mutex_t	m_meals_eaten;
+	pthread_mutex_t	m_fullness;
 	pthread_mutex_t	m_print;
 }	t_table;
 
 typedef struct s_philo {
 	int				id;
+	int				meals_eaten;
 	pthread_t		thread;
 	size_t			t_last_meal;
 	pthread_mutex_t	*first;
@@ -56,9 +57,9 @@ typedef struct s_philo {
 
 int		parse_arg(const char *nptr);
 int		init_table(int argc, char *argv[], t_table *table, t_philo **philos);
-int		create_threads(t_table *table);
+int		create_threads(int n, t_philo *philos);
 int		end_simulation(t_table *table);
-int		is_finished(t_philo *philo);
+int		is_finished(t_table *table);
 
 size_t	get_time_ms(void);
 void	ms_sleep(int t_ms);
