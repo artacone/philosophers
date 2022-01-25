@@ -28,7 +28,7 @@ int	main(int argc, char *argv[])
 	}
 	while (!is_finished(&table))
 	{
-		usleep(1000);
+		usleep(500);
 	}
 
 //	if (!end_simulation(&table))

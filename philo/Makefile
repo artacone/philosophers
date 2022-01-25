@@ -16,9 +16,9 @@ DEP			=	$(OBJ:%.o=%.d)
 
 CC			=	gcc
 
-CFLAGS		=	-Wall -Wextra -Werror -MMD -pthread
+CFLAGS		=	-Wall -Wextra -Werror -MMD -pthread -O2
 
-LDFLAGS		=	-pthread
+LDFLAGS		=	-pthread -O2
 #CFLAGS += -g -fsanitize=address
 #LDFLAGS += -g -fsanitize=address
 

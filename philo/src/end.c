@@ -12,35 +12,34 @@
 #include "../include/main.h"
 #include "../include/error.h"
 
-static int
-	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print, pthread_mutex_t *time)
+static int	destroy_mutexes(int n, t_table *table)
 {
 	while (n > 0)
 	{
-		if (pthread_mutex_destroy(&forks[--n]) != 0)
+		if (pthread_mutex_destroy(&table->m_forks[--n]) != 0)
 		{
 			return (0);
 		}
 	}
-	if (pthread_mutex_destroy(print) != 0)
+	if (pthread_mutex_destroy(&table->m_print) != 0)
 	{
 		return (0);
 	}
-	if (pthread_mutex_destroy(time) != 0)
+	if (pthread_mutex_destroy(&table->m_fullness) != 0)
 	{
 		return (0);
 	}
 	return (1);
 }
-
-static int
-	free_resources(t_philo *philos, pthread_t *ths, pthread_mutex_t *forks)
-{
-	free(philos);
-	free(ths);
-	free(forks);
-	return (1);
-}
+//
+//static int
+//	free_resources(t_philo *philos, pthread_t *ths, pthread_mutex_t *forks)
+//{
+//	free(philos);
+//	free(ths);
+//	free(forks);
+//	return (1);
+//}
 
 int
 	end_simulation(t_table *table)
@@ -48,16 +47,12 @@ int
 	int	n;
 
 	n = table->input.n_philos;
-	if (pthread_join(table->watcher, NULL))
-	{
-		print_error(ERRMSG_THREAD_JOIN, &table->m_print);
-		return (0);
-	}
-	if (!destroy_mutexes(n, table->m_forks, &table->m_print, &table->m_time))
+
+	if (!destroy_mutexes(n, table))
 	{
 		print_error(ERRMSG_MUTEX_DESTROY, &table->m_print);
 		return (0);
 	}
-	free_resources(table->philos, table->threads, table->m_forks);
+//	free_resources(table->philos, table->threads, table->m_forks);
 	return (1);
 }
