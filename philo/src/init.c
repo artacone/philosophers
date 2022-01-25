@@ -85,6 +85,7 @@ static int	init_philos(t_table *table)
 		philos[i].time = &table->m_time;
 		philos[i].input = &table->input;
 		philos[i].meals_left = philos->input->n_to_eat;
+		philos[i].ok = &table->ok;
 		++i;
 	}
 	table->philos = philos;
@@ -113,5 +114,6 @@ int	init_table(int argc, char *argv[], t_table *table)
 	if (!init_threads(table))
 		return (0);
 	table->input.t_start = get_time_ms();
+	table->ok = 1;
 	return (1);
 }

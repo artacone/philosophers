@@ -45,9 +45,11 @@ typedef struct s_philo {
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*time;
 	t_input			*input;
+	int				*ok;
 }	t_philo;
 
 typedef struct s_table {
+	int				ok;
 	t_input			input;
 	t_philo			*philos;
 	pthread_t		*threads;

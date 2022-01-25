@@ -12,6 +12,11 @@
 #include "../include/main.h"
 #include "../include/error.h"
 
+int	is_finished(t_philo *philo)
+{
+	return (*(philo->ok) || (philo->input->hungry == 0));
+}
+
 static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
 	if (!philo->is_alive)
@@ -53,6 +58,31 @@ static void	eat_sleep_think(t_philo *philo)
 	if (!philo->is_alive)
 		return ;
 	print_msg(MSG_THINK, philo);
+}
+
+static void	kill_philo(t_philo *philo)
+{
+	if (is_finished(philo))
+		return ;
+	print_msg(MSG_DEATH, philo); // FIXME
+	*(philo->ok) = 0;
+}
+
+static void	*watcher2(void *arg)
+{
+	t_philo	*philo;
+
+	philo = arg;
+	while (!is_finished(philo))
+	{
+		pthread_mutex_lock(philo->time);
+		if ((int)(get_time_ms() - philo->t_last_meal) > philo->input->t_to_die)
+			break ;
+		pthread_mutex_unlock(philo->time);
+		usleep(2000);
+	}
+	kill_philo(philo);
+	return (NULL);
 }
 
 void	*philo_routine(void *arg)
