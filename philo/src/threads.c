@@ -26,7 +26,7 @@ static void	philo_take_fork(t_philo *philo, pthread_mutex_t *fork)
 	print_msg(MSG_FORK, philo);
 }
 
-static void	check_fullness(t_philo *philo, int meals_eaten)
+static void	check_fullness(t_philo *philo)
 {
 	t_table	*table;
 
@@ -49,7 +49,7 @@ static void	philo_eat(t_philo *philo)
 	print_msg(MSG_EAT, philo);
 	ms_sleep(philo->table->input.t_to_eat);
 	++(philo->meals_eaten);
-	check_fullness(philo, philo->meals_eaten);
+	check_fullness(philo);
 }
 
 static void	philo_sleep(t_philo *philo)

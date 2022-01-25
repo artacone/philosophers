@@ -26,9 +26,14 @@ int	main(int argc, char *argv[])
 	{
 		return (ERROR_THREAD);
 	}
-	if (!end_simulation(&table))
+	while (!is_finished(&table))
 	{
-		return (ERROR_ENDSIM);
+		usleep(1000);
 	}
+
+//	if (!end_simulation(&table))
+//	{
+//		return (ERROR_ENDSIM);
+//	}
 	return (0);
 }
