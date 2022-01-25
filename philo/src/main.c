@@ -29,5 +29,5 @@ int	main(int argc, char *argv[])
 	{
 		return (ERROR_ENDSIM);
 	}
-	return (0); // Consider returning status upon death/all_eaten
+	return (0);
 }

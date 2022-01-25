@@ -139,11 +139,6 @@ void	*watcher_routine(void *arg)
 		}
 	}
 	kill_all(philos, n);
-
-	pthread_mutex_lock(&table->m_print);
-	printf("===WATCHER OUT===\n"); // FIXME
-	pthread_mutex_unlock(&table->m_print);
-
 	return (NULL);
 }
 

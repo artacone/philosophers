@@ -12,14 +12,9 @@
 
 #include "../include/main.h"
 
-/* TODO
- * 	Add specific error messages and errcodes
- * 	Check args are valid (numbers > 0) (maybe change atoi)
-*/
-
 static int	init_input(int argc, char *argv[], t_input *in)
 {
-	if (argc < 5 || argc > 6)
+	if (argc != 5 && argc != 6)
 	{
 		printf("Error: wrong number of args.\n");
 		return (0);
@@ -92,8 +87,6 @@ static int	init_philos(t_table *table)
 		philos[i].meals_left = philos->input->n_to_eat;
 		++i;
 	}
-//	philos[n - 1].first = &table->m_forks[0];
-//	philos[n - 1].second = &table->m_forks[n - 1];
 	table->philos = philos;
 	return (1);
 }
