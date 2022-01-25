@@ -19,8 +19,8 @@ CC			=	gcc
 CFLAGS		=	-Wall -Wextra -Werror -MMD -pthread -O2
 
 LDFLAGS		=	-pthread -O2
-#CFLAGS += -g -fsanitize=address
-#LDFLAGS += -g -fsanitize=address
+CFLAGS += -g -fsanitize=address
+LDFLAGS += -g -fsanitize=address
 
 RM			=	rm -f
 

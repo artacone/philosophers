@@ -58,7 +58,7 @@ typedef struct s_philo {
 int		parse_arg(const char *nptr);
 int		init_table(int argc, char *argv[], t_table *table, t_philo **philos);
 int		create_threads(int n, t_philo *philos);
-int		end_simulation(t_table *table);
+int		end_simulation(t_table *table, t_philo *philos);
 int		is_finished(t_table *table);
 
 size_t	get_time_ms(void);

@@ -30,10 +30,11 @@ int	main(int argc, char *argv[])
 	{
 		usleep(500);
 	}
-
-//	if (!end_simulation(&table))
-//	{
-//		return (ERROR_ENDSIM);
-//	}
+	if (!end_simulation(&table, philos))
+	{
+		return (ERROR_ENDSIM);
+	}
+	free(table.m_forks);
+	free(philos);
 	return (0);
 }
