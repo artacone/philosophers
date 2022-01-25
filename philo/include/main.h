@@ -24,45 +24,41 @@
 # define MSG_THINK	"is thinking"
 # define MSG_DEATH	"died"
 
-// Consider unsigned
 typedef struct s_input {
 	int		n_philos;
 	int		t_to_die;
 	int		t_to_eat;
 	int		t_to_sleep;
 	int		n_to_eat;
-	int		hungry;
-	size_t	t_start;
 }	t_input;
+
+typedef struct s_table {
+	t_input			input;
+	int				ok;
+	int				meals_eaten;
+	size_t			t_start;
+	pthread_mutex_t	*m_forks;
+	pthread_mutex_t	m_meals_eaten;
+	pthread_mutex_t	m_print;
+}	t_table;
 
 typedef struct s_philo {
 	int				id;
-	int				is_alive;
-	int				meals_left;
+	pthread_t		thread;
 	size_t			t_last_meal;
 	pthread_mutex_t	*first;
 	pthread_mutex_t	*second;
-	pthread_mutex_t	*print;
-	pthread_mutex_t	*time;
-	t_input			*input;
-	int				*ok;
+	pthread_mutex_t	m_start;
+	pthread_mutex_t	m_time;
+	t_table			*table;
 }	t_philo;
 
-typedef struct s_table {
-	int				ok;
-	t_input			input;
-	t_philo			*philos;
-	pthread_t		*threads;
-	pthread_t		watcher;
-	pthread_mutex_t	*m_forks;
-	pthread_mutex_t	m_print;
-	pthread_mutex_t	m_time;
-}	t_table;
 
 int		parse_arg(const char *nptr);
-int		init_table(int argc, char *argv[], t_table *table);
+int		init_table(int argc, char *argv[], t_table *table, t_philo **philos);
 int		create_threads(t_table *table);
 int		end_simulation(t_table *table);
+int		is_finished(t_philo *philo);
 
 size_t	get_time_ms(void);
 void	ms_sleep(int t_ms);
