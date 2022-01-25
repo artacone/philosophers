@@ -57,14 +57,17 @@ static void	eat_sleep_think(t_philo *philo)
 
 void	*philo_routine(void *arg)
 {
-	t_philo	*philo;
+	pthread_t	watcher;
+	t_philo		*philo;
 
 	philo = (t_philo *)arg;
 	philo->t_last_meal = get_time_ms();
+	if (pthread_create(&watcher, NULL, watcher2, philo) ||
+			pthread_detach(watcher))
+		return (NULL);
+	philo->t_last_meal = get_time_ms();
 	if (philo->id % 2 == 0)
-	{
-		ms_sleep(philo->input->t_to_eat);
-	}
+		ms_sleep(1); // ???
 	while (philo->is_alive)
 	{
 		eat_sleep_think(philo);
