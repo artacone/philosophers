@@ -18,12 +18,14 @@ void	print_error(char *err_msg, pthread_mutex_t *lock)
 	pthread_mutex_unlock(lock);
 }
 
-// Send only id and timestamp
 void	print_msg(char *str, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->table->m_print);
-	if (is_finished(philo->table))
+	t_table	*table;
+
+	table = philo->table;
+	pthread_mutex_lock(&table->m_print);
+	if (is_finished(table))
 		return ;
-	printf("%lu %d %s\n", get_time_ms() - philo->table->t_start, philo->id, str); // FIXME
-	pthread_mutex_unlock(&philo->table->m_print);
+	printf("%lu %d %s\n", get_time_ms() - table->t_start, philo->id, str);
+	pthread_mutex_unlock(&table->m_print);
 }

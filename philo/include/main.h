@@ -44,7 +44,6 @@ typedef struct s_table {
 
 typedef struct s_philo {
 	int				id;
-	int				meals_eaten;
 	pthread_t		thread;
 	size_t			t_last_meal;
 	pthread_mutex_t	*first;
@@ -53,7 +52,6 @@ typedef struct s_philo {
 	pthread_mutex_t	m_time;
 	t_table			*table;
 }	t_philo;
-
 
 int		parse_arg(const char *nptr);
 int		init_table(int argc, char *argv[], t_table *table, t_philo **philos);
@@ -66,5 +64,11 @@ void	ms_sleep(int t_ms);
 
 void	print_msg(char *str, t_philo *philo);
 void	print_error(char *err_msg, pthread_mutex_t *lock);
+
+void	philo_take_fork(t_philo *philo, pthread_mutex_t *fork);
+void	check_fullness(t_table *table, int meals_eaten);
+void	philo_eat(t_philo *philo);
+void	philo_sleep(t_philo *philo);
+void	philo_think(t_philo *philo);
 
 #endif

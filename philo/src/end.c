@@ -14,6 +14,7 @@
 static void	destroy_philos(int n, t_philo *philos)
 {
 	int	i;
+
 	i = 0;
 	while (i < n)
 	{
@@ -27,6 +28,7 @@ static void	destroy_philos(int n, t_philo *philos)
 static void	destroy_forks(int n, pthread_mutex_t *forks)
 {
 	int	i;
+
 	i = 0;
 	while (i < n)
 	{
@@ -40,7 +42,6 @@ int	end_simulation(t_table *table, t_philo *philos)
 	int	n;
 
 	n = table->input.n_philos;
-
 	destroy_philos(n, philos);
 	destroy_forks(n, table->m_forks);
 	pthread_mutex_destroy(&table->m_print);

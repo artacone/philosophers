@@ -72,18 +72,16 @@ static int	init_philos(int n, t_table *table, t_philo **philos)
 		ps[i].id = i + 1;
 		ps[i].first = &table->m_forks[i];
 		ps[i].second = &table->m_forks[(i + 1) % n];
-		if (pthread_mutex_init(&ps[i].m_start, NULL) ||
-				pthread_mutex_init(&ps[i].m_time, NULL))
+		if (pthread_mutex_init(&ps[i].m_start, NULL)
+			|| pthread_mutex_init(&ps[i].m_time, NULL))
 			return (0);
 		ps[i].table = table;
-		ps[i].meals_eaten = 0;
 		pthread_mutex_lock(&ps[i].m_start);
 		++i;
 	}
 	*philos = ps;
 	return (1);
 }
-
 
 int	init_table(int argc, char *argv[], t_table *table, t_philo **philos)
 {
