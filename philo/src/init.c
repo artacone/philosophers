@@ -59,15 +59,13 @@ static int	init_mutexes(t_table *table)
 	while (n > 0)
 	{
 		if (pthread_mutex_init(&forks[--n], NULL) != 0)
-		{
 			return (0);
-		}
 	}
 	table->m_forks = forks;
 	if (pthread_mutex_init(&table->m_print, NULL) != 0)
-	{
 		return (0);
-	}
+	if (pthread_mutex_init(&table->m_time, NULL) != 0)
+		return (0);
 	return (1);
 }
 
@@ -89,12 +87,13 @@ static int	init_philos(t_table *table)
 		philos[i].first = &table->m_forks[i];
 		philos[i].second = &table->m_forks[(i + 1) % n];
 		philos[i].print = &table->m_print;
+		philos[i].time = &table->m_time;
 		philos[i].input = &table->input;
 		philos[i].meals_left = philos->input->n_to_eat;
 		++i;
 	}
-	philos[n - 1].first = &table->m_forks[0];
-	philos[n - 1].second = &table->m_forks[n - 1];
+//	philos[n - 1].first = &table->m_forks[0];
+//	philos[n - 1].second = &table->m_forks[n - 1];
 	table->philos = philos;
 	return (1);
 }

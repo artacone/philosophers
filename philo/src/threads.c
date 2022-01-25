@@ -12,32 +12,46 @@
 #include "../include/main.h"
 #include "../include/error.h"
 
+static void	take_fork(t_philo *philo, pthread_mutex_t *fork)
+{
+	if (!philo->is_alive)
+		return ;
+	pthread_mutex_lock(fork);
+	print_msg(MSG_FORK, philo);
+}
+
+static void	eat(t_philo *philo)
+{
+	if (!philo->is_alive)
+		return ;
+	print_msg(MSG_EAT, philo);
+	pthread_mutex_lock(philo->time);
+	philo->t_last_meal = get_time_ms();
+	pthread_mutex_unlock(philo->time);
+	ms_sleep(philo->input->t_to_eat);
+}
+
 static void	eat_sleep_think(t_philo *philo)
 {
-	pthread_mutex_lock(philo->first);
-	print_msg(MSG_FORK, philo);
-
-	pthread_mutex_lock(philo->second);
-	print_msg(MSG_FORK, philo);
-
-	philo->t_last_meal = get_time_ms();
-	print_msg(MSG_EAT, philo);
-	ms_sleep(philo->input->t_to_eat);
-
-	pthread_mutex_unlock(philo->second);
-	pthread_mutex_unlock(philo->first);
-
-	pthread_mutex_lock(philo->print);
+	if (philo->id % 2 == 0)
+	{
+		take_fork(philo, philo->first);
+		take_fork(philo, philo->second);
+	}
+	else
+	{
+		take_fork(philo, philo->second);
+		take_fork(philo, philo->first);
+	}
+	eat(philo);
 	if (philo->meals_left > 0)
 		philo->meals_left -= 1;
-	pthread_mutex_unlock(philo->print);
-
-//	pthread_mutex_lock(philo->print);
-//	printf("(%d) meals left: %d\nhungry: %d\n", philo->id, philo->meals_left, philo->input->hungry);
-//	pthread_mutex_unlock(philo->print);
-
 	print_msg(MSG_SLEEP, philo);
+	pthread_mutex_unlock(philo->second);
+	pthread_mutex_unlock(philo->first);
 	ms_sleep(philo->input->t_to_sleep);
+	if (!philo->is_alive)
+		return ;
 	print_msg(MSG_THINK, philo);
 }
 
@@ -60,14 +74,14 @@ void	*philo_routine(void *arg)
 
 int	has_died(t_philo *philo)
 {
-	pthread_mutex_lock(philo->print);
+	pthread_mutex_lock(philo->time);
 	if ((int)(get_time_ms() - philo->t_last_meal) > philo->input->t_to_die)
 	{
 		philo->is_alive = 0;
-		pthread_mutex_unlock(philo->print);
+		pthread_mutex_unlock(philo->time);
 		return (1);
 	}
-	pthread_mutex_unlock(philo->print);
+	pthread_mutex_unlock(philo->time);
 	return (0);
 }
 

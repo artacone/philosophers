@@ -13,7 +13,7 @@
 #include "../include/error.h"
 
 static int
-	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print)
+	destroy_mutexes(int n, pthread_mutex_t *forks, pthread_mutex_t *print, pthread_mutex_t *time)
 {
 	while (n > 0)
 	{
@@ -23,6 +23,10 @@ static int
 		}
 	}
 	if (pthread_mutex_destroy(print) != 0)
+	{
+		return (0);
+	}
+	if (pthread_mutex_destroy(time) != 0)
 	{
 		return (0);
 	}
@@ -49,7 +53,7 @@ int
 		print_error(ERRMSG_THREAD_JOIN, &table->m_print);
 		return (0);
 	}
-	if (!destroy_mutexes(n, table->m_forks, &table->m_print))
+	if (!destroy_mutexes(n, table->m_forks, &table->m_print, &table->m_time))
 	{
 		print_error(ERRMSG_MUTEX_DESTROY, &table->m_print);
 		return (0);

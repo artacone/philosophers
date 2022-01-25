@@ -43,6 +43,7 @@ typedef struct s_philo {
 	pthread_mutex_t	*first;
 	pthread_mutex_t	*second;
 	pthread_mutex_t	*print;
+	pthread_mutex_t	*time;
 	t_input			*input;
 }	t_philo;
 
@@ -53,6 +54,7 @@ typedef struct s_table {
 	pthread_t		watcher;
 	pthread_mutex_t	*m_forks;
 	pthread_mutex_t	m_print;
+	pthread_mutex_t	m_time;
 }	t_table;
 
 int		parse_arg(const char *nptr);
