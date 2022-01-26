@@ -9,7 +9,7 @@
 /*   Updated: 2022/01/23 18:21:38 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <philo.h>
+#include "../include/philo.h"
 
 void	print_error(char *err_msg, pthread_mutex_t *lock)
 {
@@ -20,12 +20,10 @@ void	print_error(char *err_msg, pthread_mutex_t *lock)
 
 void	print_msg(char *str, t_philo *philo)
 {
-	t_table	*table;
+	size_t	timestamp;
 
-	table = philo->table;
-	pthread_mutex_lock(&table->m_print);
-	if (is_finished(table))
-		return ;
-	printf("%lu %d %s\n", get_time_ms() - table->t_start, philo->id, str);
-	pthread_mutex_unlock(&table->m_print);
+	timestamp = get_time_ms() - philo->table->t_start;
+	sem_wait(philo->sem_print);
+	printf("%lu %d %s\n", timestamp, philo->id, str);
+	sem_post(philo->sem_print);
 }

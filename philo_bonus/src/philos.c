@@ -9,22 +9,13 @@
 /*   Updated: 2022/01/22 19:50:23 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <philo.h>
-#include <error.h>
-
-int	is_finished(t_table	*table)
-{
-	return (!table->ok || (table->input.n_to_eat != -1
-			&& table->n_full == table->input.n_philos));
-}
+#include "../include/philo.h"
 
 static void	kill_philo(t_table *table, int id)
 {
-	if (is_finished(table))
-		return ;
-	pthread_mutex_lock(&table->m_print);
+	sem_wait(table->sem_print);
 	printf("%lu %d %s\n", get_time_ms() - table->t_start, id, MSG_DEATH);
-	table->ok = 0;
+	sem_post(table->sem_end);
 }
 
 static void	*watcher_routine(void *arg)
@@ -36,35 +27,25 @@ static void	*watcher_routine(void *arg)
 	philo = (t_philo *)arg;
 	table = philo->table;
 	id = philo->id;
-	while (!is_finished(table))
+	while (1)
 	{
-		pthread_mutex_lock(&philo->m_time);
+		sem_wait(philo->sem_time);
 		if ((int)(get_time_ms() - philo->t_last_meal) > table->input.t_to_die)
 			break ;
-		pthread_mutex_unlock(&philo->m_time);
+		sem_post(philo->sem_time);
 		usleep(2000);
 	}
 	kill_philo(table, id);
 	return (NULL);
 }
 
-static void	*philo_routine(void *arg)
+static void	philo_routine(t_philo *philo)
 {
-	pthread_t	watcher;
-	t_philo		*philo;
-	int			meals_eaten;
+	int	meals_eaten;
 
-	philo = (t_philo *)arg;
 	meals_eaten = 0;
-	pthread_mutex_lock(&philo->m_start);
-	if (is_finished(philo->table))
-		return (NULL);
 	philo->t_last_meal = get_time_ms();
-	if (pthread_create(&watcher, NULL, watcher_routine, philo))
-		return (NULL);
-	pthread_detach(watcher);
-	philo->t_last_meal = get_time_ms();
-	while (!is_finished(philo->table))
+	while (1)
 	{
 		philo_eat(philo);
 		++meals_eaten;
@@ -72,35 +53,64 @@ static void	*philo_routine(void *arg)
 		philo_sleep(philo);
 		philo_think(philo);
 	}
-	pthread_mutex_unlock(&philo->m_start);
-	return (NULL);
 }
-
-int	create_threads(int n, t_philo *philos)
+static void	make_sem_name(char *name, int n)
 {
 	int	i;
 
-	i = -1;
-	while (++i < n)
-	{
-		if (pthread_create(&philos[i].thread, NULL, philo_routine, philos + i))
-		{
-			print_error(ERRMSG_THREAD_CREATE, &philos[i].table->m_print);
-			return (0);
-		}
-	}
 	i = 0;
-	while (i < n)
+	while (SEM_NAME_TIME[i])
 	{
-		pthread_mutex_unlock(&philos[i].m_start);
-		i += 2;
+		name[i] = SEM_NAME_TIME[i];
+		++i;
 	}
-	usleep(1000);
-	i = 1;
-	while (i < n)
+	name[i++] = '_';
+	while (n)
 	{
-		pthread_mutex_unlock(&philos[i].m_start);
-		i += 2;
+		name[i] = n % 10 + '0';
+		n /= 10;
+		++i;
 	}
+}
+
+static int	init_philo_semaphores(t_philo *philo)
+{
+	char	sem_name_time[256];
+
+	make_sem_name(sem_name_time, philo->id);
+	if (!semaphore_create(SEM_NAME_FORKS, 0, &philo->sem_forks)
+		|| !semaphore_create(SEM_NAME_PRINT, 0, &philo->sem_print)
+		|| !semaphore_create(SEM_NAME_START, 0, &philo->sem_start)
+		|| !semaphore_create(SEM_NAME_FULL, 0, &philo->sem_fullness)
+		|| !semaphore_create(SEM_NAME_END, 0, &philo->sem_end)
+		|| !semaphore_create(SEM_NAME_TAKE, 0, &philo->sem_take)
+		|| !semaphore_create(sem_name_time, 1, &philo->sem_time))
+		return (0);
 	return (1);
+}
+
+pid_t	start_philo(t_philo *philo)
+{
+	pthread_t	watcher;
+	pid_t		pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		philo->sem_end = SEM_FAILED;
+		if (!init_philo_semaphores(philo))
+		{
+			if (philo->sem_end != SEM_FAILED)
+				sem_post(philo->sem_end);
+			exit(1);
+		}
+		sem_wait(philo->sem_start);
+		philo->t_last_meal = get_time_ms(); // Data race ???
+		if (pthread_create(&watcher, NULL, watcher_routine, philo))
+			exit(sem_post(philo->sem_end)); // Change ret num
+		pthread_detach(watcher);
+		philo_routine(philo);
+		exit(0);
+	}
+	return (pid);
 }

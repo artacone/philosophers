@@ -36,7 +36,7 @@ static int	init_input(int argc, char *argv[], t_input *in)
 	return (1);
 }
 
-static int	semaphore_create(const char *name, int value, sem_t **sem)
+int	semaphore_create(const char *name, int value, sem_t **sem)
 {
 	if (value == 0)
 	{
@@ -79,17 +79,19 @@ static int	init_philos(int n, t_table *table, pid_t *pids)
 	i = -1;
 	while (++i < n)
 		sem_wait(table->sem_start);
-	i = -1
+	i = -1;
 	while (++i < n)
 	{
 		philo.table = table;
 		philo.id = i + 1;
 		philo.t_start = t_start;
-		pids[i]; // start philo process
+		pids[i] = start_philo(&philo);
+		if (pids[i] == -1)
+			return (0);
 	}
 	i = -1;
 	while (++i < n)
-		sem_post(table->sem_start); // May be inside process ???
+		sem_post(table->sem_start);
 	return (1);
 }
 

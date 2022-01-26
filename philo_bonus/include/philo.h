@@ -28,9 +28,10 @@
 # define SEM_NAME_FORKS	"philo_forks"
 # define SEM_NAME_PRINT	"philo_print"
 # define SEM_NAME_END	"philo_end"
-# define SEM_NAME_FULL	"philo_meal"
+# define SEM_NAME_FULL	"philo_fullness"
 # define SEM_NAME_START "philo_start"
-# define SEM_NAME_GRAB	"philo_grab"
+# define SEM_NAME_TAKE	"philo_take"
+# define SEM_NAME_TIME	"philo_time"
 
 typedef struct s_input {
 	int		n_philos;
@@ -50,26 +51,26 @@ typedef struct s_table {
 	sem_t	*sem_print;
 	sem_t	*sem_start;
 	sem_t	*sem_end;
-	sem_t	*sem_grab;
+	sem_t	*sem_take;
 }	t_table;
 
 typedef struct s_philo {
-	int				id;
-	pthread_t		thread;
-	size_t			t_last_meal;
-	size_t			t_start;
-	pthread_mutex_t	*first;
-	pthread_mutex_t	*second;
-	pthread_mutex_t	m_start;
-	pthread_mutex_t	m_time;
-	t_table			*table;
+	int		id;
+	size_t	t_last_meal;
+	size_t	t_start;
+	sem_t	*sem_forks;
+	sem_t	*sem_fullness;
+	sem_t	*sem_print;
+	sem_t	*sem_start;
+	sem_t	*sem_end;
+	sem_t	*sem_take;
+	sem_t	*sem_time;
+	t_table	*table;
 }	t_philo;
 
 int		parse_arg(const char *nptr);
 int		init_table(int argc, char *argv[], t_table *table, pid_t **pids);
-int		create_threads(int n, t_philo *philos);
 int		end_simulation(t_table *table, t_philo *philos);
-int		is_finished(t_table *table);
 
 size_t	get_time_ms(void);
 void	ms_sleep(int t_ms);
@@ -77,10 +78,14 @@ void	ms_sleep(int t_ms);
 void	print_msg(char *str, t_philo *philo);
 void	print_error(char *err_msg, pthread_mutex_t *lock);
 
-void	philo_take_fork(t_philo *philo, pthread_mutex_t *fork);
+void	philo_take_fork(t_philo *philo);
 void	check_fullness(t_table *table, int meals_eaten);
 void	philo_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
 void	philo_think(t_philo *philo);
+
+pid_t	start_philo(t_philo *philo);
+
+int	semaphore_create(const char *name, int value, sem_t **sem);
 
 #endif
