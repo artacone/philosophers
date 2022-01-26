@@ -9,8 +9,8 @@
 /*   Updated: 2022/01/22 19:50:23 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/main.h"
-#include "../include/error.h"
+#include <philo.h>
+#include <error.h>
 
 int	is_finished(t_table	*table)
 {

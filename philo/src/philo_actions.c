@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/main.h"
+#include <philo.h>
 
 void	philo_take_fork(t_philo *philo, pthread_mutex_t *fork)
 {
@@ -66,4 +66,5 @@ void	philo_think(t_philo *philo)
 	if (is_finished(philo->table))
 		return ;
 	print_msg(MSG_THINK, philo);
+	usleep(100);
 }

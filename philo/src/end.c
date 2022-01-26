@@ -9,7 +9,7 @@
 /*   Updated: 2022/01/23 17:46:30 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/main.h"
+#include <philo.h>
 
 static void	destroy_philos(int n, t_philo *philos)
 {

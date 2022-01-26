@@ -9,7 +9,7 @@
 /*   Updated: 2022/01/23 18:21:38 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/main.h"
+#include <philo.h>
 
 void	print_error(char *err_msg, pthread_mutex_t *lock)
 {

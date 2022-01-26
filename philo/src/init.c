@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/main.h"
+#include <philo.h>
 
 static int	init_input(int argc, char *argv[], t_input *in)
 {

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAIN_H
-# define MAIN_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <stdio.h>
 # include <pthread.h>

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <main.h>
+#include <philo.h>
 #include <error.h>
 
 int	main(int argc, char *argv[])
@@ -34,7 +34,5 @@ int	main(int argc, char *argv[])
 	{
 		return (ERROR_ENDSIM);
 	}
-	free(table.m_forks);
-	free(philos);
 	return (0);
 }
