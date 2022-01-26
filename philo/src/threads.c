@@ -57,13 +57,14 @@ static void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	meals_eaten = 0;
 	pthread_mutex_lock(&philo->m_start);
+	pthread_mutex_lock(&philo->m_time);
 	if (is_finished(philo->table))
 		return (NULL);
-	philo->t_last_meal = get_time_ms();
 	if (pthread_create(&watcher, NULL, watcher_routine, philo))
 		return (NULL);
 	pthread_detach(watcher);
 	philo->t_last_meal = get_time_ms();
+	pthread_mutex_unlock(&philo->m_time);
 	while (!is_finished(philo->table))
 	{
 		philo_eat(philo);
