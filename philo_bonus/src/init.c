@@ -63,7 +63,7 @@ static int	init_semaphores(t_table *table)
 	n = table->input.n_philos;
 	if (!semaphore_create(SEM_NAME_FORKS, n, &table->sem_forks)
 		|| !semaphore_create(SEM_NAME_PRINT, 1, &table->sem_print)
-		|| !semaphore_create(SEM_NAME_START, 1, &table->sem_start)
+		|| !semaphore_create(SEM_NAME_START, n, &table->sem_start)
 		|| !semaphore_create(SEM_NAME_FULL, n, &table->sem_fullness)
 		|| !semaphore_create(SEM_NAME_END, 1, &table->sem_end)
 		|| !semaphore_create(SEM_NAME_TAKE, 1, &table->sem_take))
