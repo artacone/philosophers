@@ -44,7 +44,7 @@ static void	philo_routine(t_philo *philo)
 	int	meals_eaten;
 
 	meals_eaten = 0;
-	philo->t_last_meal = get_time_ms();
+	philo->t_last_meal = get_time_ms(); // FIXME Race condition
 	while (1)
 	{
 		philo_eat(philo);
@@ -105,7 +105,7 @@ pid_t	start_philo(t_philo *philo)
 			exit(1);
 		}
 		sem_wait(philo->sem_start);
-		philo->t_last_meal = get_time_ms(); // Data race ???
+		philo->t_last_meal = get_time_ms();
 		if (pthread_create(&watcher, NULL, watcher_routine, philo))
 			exit(sem_post(philo->sem_end)); // Change ret num
 		pthread_detach(watcher);

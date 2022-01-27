@@ -52,5 +52,5 @@ void	philo_sleep(t_philo *philo)
 void	philo_think(t_philo *philo)
 {
 	print_msg(MSG_THINK, philo);
-	// usleep(100); FIXME
+	usleep(100);
 }
