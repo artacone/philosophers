@@ -9,7 +9,6 @@
 /*   Updated: 2022/01/26 02:41:45 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/philo.h"
 
 void	philo_take_fork(t_philo *philo)
@@ -22,10 +21,8 @@ void	check_fullness(t_table *table, int meals_eaten)
 {
 	if (meals_eaten == table->input.n_to_eat)
 	{
-		sem_wait(table->sem_print);
 		sem_post(table->sem_fullness);
-		sem_post(table->sem_print);
-	} // FIXME ???
+	}
 }
 
 void	philo_eat(t_philo *philo)

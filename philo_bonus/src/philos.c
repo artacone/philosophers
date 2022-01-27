@@ -44,7 +44,9 @@ static void	philo_routine(t_philo *philo)
 	int	meals_eaten;
 
 	meals_eaten = 0;
-	philo->t_last_meal = get_time_ms(); // FIXME Race condition
+	sem_wait(philo->sem_time);
+	philo->t_last_meal = get_time_ms();
+	sem_post(philo->sem_time);
 	while (1)
 	{
 		philo_eat(philo);
@@ -54,30 +56,23 @@ static void	philo_routine(t_philo *philo)
 		philo_think(philo);
 	}
 }
-static void	make_sem_name(char *name, int n)
-{
-	int	i;
-
-	i = 0;
-	while (SEM_NAME_TIME[i])
-	{
-		name[i] = SEM_NAME_TIME[i];
-		++i;
-	}
-	name[i++] = '_';
-	while (n)
-	{
-		name[i] = n % 10 + '0';
-		n /= 10;
-		++i;
-	}
-}
 
 static int	init_philo_semaphores(t_philo *philo)
 {
 	char	sem_name_time[256];
+	int		i;
+	int		n;
 
-	make_sem_name(sem_name_time, philo->id);
+	n = philo->id;
+	i = -1;
+	while (SEM_NAME_TIME[++i])
+		sem_name_time[i] = SEM_NAME_TIME[i];
+	sem_name_time[i++] = '_';
+	while (n)
+	{
+		sem_name_time[i++] = n % 10 + '0';
+		n /= 10;
+	}
 	if (!semaphore_create(SEM_NAME_FORKS, 0, &philo->sem_forks)
 		|| !semaphore_create(SEM_NAME_PRINT, 0, &philo->sem_print)
 		|| !semaphore_create(SEM_NAME_START, 0, &philo->sem_start)
@@ -107,7 +102,7 @@ pid_t	start_philo(t_philo *philo)
 		sem_wait(philo->sem_start);
 		philo->t_last_meal = get_time_ms();
 		if (pthread_create(&watcher, NULL, watcher_routine, philo))
-			exit(sem_post(philo->sem_end)); // Change ret num
+			exit(sem_post(philo->sem_end));
 		pthread_detach(watcher);
 		philo_routine(philo);
 		exit(0);

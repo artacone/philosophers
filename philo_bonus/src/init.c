@@ -9,7 +9,6 @@
 /*   Updated: 2022/01/23 17:24:24 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/philo.h"
 
 static int	init_input(int argc, char *argv[], t_input *in)
