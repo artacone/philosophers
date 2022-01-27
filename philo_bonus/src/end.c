@@ -9,42 +9,37 @@
 /*   Updated: 2022/01/23 17:46:30 by rvertie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <philo.h>
+#include "../include/philo.h"
 
-static void	destroy_philos(int n, t_philo *philos)
+void	destroy_philos(int n, pid_t *philos)
 {
 	int	i;
 
-	i = 0;
-	while (i < n)
+	if (philos != NULL)
 	{
-		pthread_mutex_destroy(&philos[i].m_start);
-		pthread_mutex_destroy(&philos[i].m_time);
-		pthread_detach(philos[i].thread);
-		++i;
+		i = 0;
+		while (i < n)
+		{
+			kill(philos[i], SIGKILL);
+			++i;
+		}
+		free(philos);
 	}
+	sem_unlink(SEM_NAME_START);
+	sem_unlink(SEM_NAME_END);
+	sem_unlink(SEM_NAME_PRINT);
+	sem_unlink(SEM_NAME_FORKS);
+	sem_unlink(SEM_NAME_FULL);
+	sem_unlink(SEM_NAME_TAKE);
 }
 
-static void	destroy_forks(int n, pthread_mutex_t *forks)
-{
-	int	i;
-
-	i = 0;
-	while (i < n)
-	{
-		pthread_mutex_destroy(forks + i);
-		++i;
-	}
-}
-
-int	end_simulation(t_table *table, t_philo *philos)
+int	end_simulation(t_table *table, pid_t *philos)
 {
 	int	n;
 
+	sem_wait(table->sem_end);
+	sem_wait(table->sem_end);
 	n = table->input.n_philos;
 	destroy_philos(n, philos);
-	destroy_forks(n, table->m_forks);
-	pthread_mutex_destroy(&table->m_print);
-	pthread_mutex_destroy(&table->m_fullness);
 	return (1);
 }

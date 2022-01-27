@@ -13,6 +13,31 @@
 #include "../include/philo.h"
 #include "../include/error.h"
 
+static void	*watcher_routine(void *arg)
+{
+	t_table	*table;
+	int		i;
+	int		n;
+
+	table = (t_table *)arg;
+	n = table->input.n_philos;
+	i = 0;
+	while (i < n)
+	{
+		sem_wait(table->sem_fullness);
+		++i;
+	}
+	i = 0;
+	while (i < n)
+	{
+		sem_wait(table->sem_fullness);
+		++i;
+	}
+	sem_wait(table->sem_print);
+	sem_post(table->sem_end);
+	return (NULL);
+}
+
 int	main(int argc, char *argv[])
 {
 	t_table		table;
@@ -21,17 +46,19 @@ int	main(int argc, char *argv[])
 
 	if (!init_table(argc, argv, &table, &pids))
 	{
+		destroy_philos(table.input.n_philos, pids);
 		return (ERROR_INPUT);
 	}
-	if (!create_threads(table.input.n_philos, philos))
+	if (table.input.n_to_eat != -1)
 	{
-		return (ERROR_THREAD);
+		if (pthread_create(&watcher, NULL, watcher_routine, &table))
+		{
+			destroy_philos(table.input.n_philos, pids);
+			return (ERROR_THREAD);
+		}
+		pthread_detach(watcher);
 	}
-	while (!is_finished(&table))
-	{
-		usleep(500);
-	}
-	if (!end_simulation(&table, philos))
+	if (!end_simulation(&table, pids))
 	{
 		return (ERROR_ENDSIM);
 	}
